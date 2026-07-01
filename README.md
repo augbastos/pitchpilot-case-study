@@ -53,9 +53,11 @@ tenant uses its own key — so a curious visitor can never exhaust or bill the r
 
 ## Screenshots
 
-| Wingman copilot | Objection handler |
+> Screenshots are from the public white-label demo (fictional "VoltLine" energy tenant), not a client deployment.
+
+| Wingman — answering a live price objection | Pitch kit — tools, demos & key numbers |
 |---|---|
-| ![PitchPilot](assets/pitcher-app.png) | ![Objections](assets/objection-handler.png) |
+| ![Wingman copilot](assets/wingman-template.png) | ![Pitch kit](assets/pitch-kit-template.png) |
 
 ## Stack
 

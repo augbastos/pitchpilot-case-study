@@ -50,7 +50,7 @@ flowchart LR
 - **Knowledge base** — the playbook is chunked, embedded, and stored in **Supabase pgvector**, partitioned by product so a white-label tenant only ever retrieves its own content.
 - **Retrieval RPC** — a Postgres `match` function returns the nearest chunks; this is the exact shape shown in [rag-demo](https://github.com/augbastos/rag-demo).
 - **Grounded generation** — a **Supabase Edge Function** builds a context-limited prompt and calls **Gemini**. The system prompt hard-limits the model to the retrieved chunks and forbids inventing pricing or promises — accuracy over hype, because a wrong answer at a doorstep costs a sale.
-- **White-label** — one codebase rebrands for any industry in under a day; a public demo runs as "VoltLine" for the energy sector.
+- **White-label** — one codebase rebrands for any industry in under a day; a public demo runs as "VoltLine", a fictional energy-sector tenant, not a client.
 
 ## What made it actually work (the debugging that mattered)
 

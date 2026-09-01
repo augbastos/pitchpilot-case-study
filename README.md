@@ -1,5 +1,13 @@
 # PitchPilot — a field-sales companion with a RAG copilot (case study)
 
+![case study](https://img.shields.io/badge/type-case_study-6f42c1)
+![RAG](https://img.shields.io/badge/technique-RAG-8a2be2)
+![Supabase pgvector](https://img.shields.io/badge/retrieval-Supabase_pgvector-3ecf8e)
+![Gemini](https://img.shields.io/badge/generation-Gemini-4285f4)
+![TypeScript / React](https://img.shields.io/badge/frontend-TypeScript_%2F_React-3178c6)
+
+**A RAG copilot that turns a 40-page sales playbook into a grounded, cited, one-paragraph answer — at the doorstep, in real time.**
+
 > Source is private. This is the architecture and the thinking behind it — no product
 > code. The retrieval technique is shown, runnable, in a separate repo:
 > **[rag-demo](https://github.com/augbastos/rag-demo)**.
@@ -9,6 +17,11 @@ lead, run the pitch, handle objections, and track commission — all on a phone,
 door. Its core is **Wingman**, a retrieval-augmented copilot that answers a rep's
 question ("what do I say when they mention price?") from the product's own knowledge
 base, in real time, grounded and cited.
+
+**Where it stands:** this is a live, working demo — branded **"VoltLine"** for a
+fictional energy-sector vertical — not yet deployed to a real sales team. Everything
+below (the architecture, the debugging, the fixes) is real and running in that demo
+today; the next milestone is a first paying field-sales client.
 
 ## The problem
 
@@ -44,6 +57,25 @@ flowchart LR
 - **Retrieval was silently returning nothing.** An IVFFlat index over a tiny corpus collapsed recall to zero — the copilot kept deflecting to "check the FAQ." Dropping to exact search fixed it instantly. Lesson: approximate indexes need enough rows to be approximate *over*.
 - **Truncated mid-sentence answers.** The model is a "thinking" variant; reasoning tokens were eating the output budget. Setting the thinking budget to zero restored full answers.
 - **Cost under load.** The free tier dried up during a 50-question QA run, so generation falls back through a cost-ordered chain of models to stay within quota.
+
+## What a competitive check found and fixed
+
+A 2026-07-04 pass benchmarked PitchPilot's positioning against established
+sales-enablement categories — Gong/Chorus (conversation intelligence), Klue/Crayon
+(competitive intel), Highspot/Seismic (enablement platforms). The "rebrand any
+industry in under a day" claim held up for **speed**: new content, new brand, no code
+change. It did not hold up for **concurrency**. The knowledge base used a hardcoded
+two-value product set (`luckycat` and a single `template` slot), and the indexer
+deleted-and-reinserted that one `template` slot on every rebrand — so reindexing a
+second industry vertical silently wiped out whatever demo was already using it. Two
+white-label demos could never run at the same time; the claim was only ever true one
+vertical at a time.
+
+Fix: replaced the hardcoded slot with a real multi-tenant KB registry (migration
+`0096_pitcher_kb_tenants`) — each vertical now gets its own registered slug, its own
+isolated chunks, and a foreign-key constraint that stops any unregistered slug from
+writing content at all. Multiple industry demos can now coexist without one erasing
+another.
 
 ## Isolating the demo (a security note)
 

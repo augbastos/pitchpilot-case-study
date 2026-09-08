@@ -4,9 +4,9 @@
 ![RAG](https://img.shields.io/badge/technique-RAG-8a2be2)
 ![Supabase pgvector](https://img.shields.io/badge/retrieval-Supabase_pgvector-3ecf8e)
 ![Gemini](https://img.shields.io/badge/generation-Gemini-4285f4)
-![TypeScript / React](https://img.shields.io/badge/frontend-TypeScript_%2F_React-3178c6)
+![vanilla JS SPA](https://img.shields.io/badge/frontend-vanilla_JS_SPA-f7df1e)
 
-**A RAG copilot that turns a 40-page sales playbook into a grounded, cited, one-paragraph answer — at the doorstep, in real time.**
+**A RAG copilot that turns a 40-page sales playbook into a grounded one-paragraph answer, with a button to the doc it came from — at the doorstep, in real time.**
 
 > Source is private. This is the architecture and the thinking behind it — no product
 > code. The retrieval technique is shown, runnable, in a separate repo:
@@ -16,7 +16,10 @@
 lead, run the pitch, handle objections, and track commission — all on a phone, at the
 door. Its core is **Wingman**, a retrieval-augmented copilot that answers a rep's
 question ("what do I say when they mention price?") from the product's own knowledge
-base, in real time, grounded and cited.
+base, in real time. The answer is grounded — the system prompt hard-limits the model to
+the retrieved chunks — and it can hand the rep a button straight to the source doc. The
+prose itself is deliberately clean of inline citations: a rep reading off a doorstep does
+not want `[chunk 3]` in the middle of a sentence.
 
 **Where it stands:** this is a live, working demo — branded **"VoltLine"** for a
 fictional energy-sector vertical — not yet deployed to a real sales team. Everything

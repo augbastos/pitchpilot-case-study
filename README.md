@@ -6,7 +6,7 @@
 ![Gemini](https://img.shields.io/badge/generation-Gemini-4285f4)
 ![vanilla JS SPA](https://img.shields.io/badge/frontend-vanilla_JS_SPA-f7df1e)
 
-**A RAG copilot that turns a 40-page sales playbook into a grounded one-paragraph answer, with a button to the doc it came from — at the doorstep, in real time.**
+**A RAG copilot that turns a sales playbook into a grounded one-paragraph answer, with a button to the doc it came from — at the doorstep.**
 
 > Source is private. This is the architecture and the thinking behind it — no product
 > code. The retrieval technique is shown, runnable, in a separate repo:
@@ -16,19 +16,19 @@
 lead, run the pitch, handle objections, and track commission — all on a phone, at the
 door. Its core is **Wingman**, a retrieval-augmented copilot that answers a rep's
 question ("what do I say when they mention price?") from the product's own knowledge
-base, in real time. The answer is grounded — the system prompt hard-limits the model to
+base. The answer is grounded — the system prompt hard-limits the model to
 the retrieved chunks — and it can hand the rep a button straight to the source doc. The
 prose itself is deliberately clean of inline citations: a rep reading off a doorstep does
 not want `[chunk 3]` in the middle of a sentence.
 
-**Where it stands:** this is a live, working demo — branded **"VoltLine"** for a
+**Where it stands:** this is a working demo — branded **"VoltLine"** for a
 fictional energy-sector vertical — not yet deployed to a real sales team. Everything
-below (the architecture, the debugging, the fixes) is real and running in that demo
-today; the next milestone is a first paying field-sales client.
+below (the architecture, the debugging, the fixes) is real and runs in that demo.
+It has no users and no client.
 
 ## The problem
 
-A field rep can't read a 40-page playbook on a doorstep. When a prospect pushes back,
+A field rep can't read a whole playbook on a doorstep. When a prospect pushes back,
 the rep has seconds to answer, accurately, in the product's own words. Wingman turns
 the whole playbook — pricing, objections, scripts — into something you ask in natural
 language and get a one-paragraph, on-message answer from.
@@ -53,7 +53,7 @@ flowchart LR
 - **Knowledge base** — the playbook is chunked, embedded, and stored in **Supabase pgvector**, partitioned by product so a white-label tenant only ever retrieves its own content.
 - **Retrieval RPC** — a Postgres `match` function returns the nearest chunks; this is the exact shape shown in [rag-demo](https://github.com/augbastos/rag-demo).
 - **Grounded generation** — a **Supabase Edge Function** builds a context-limited prompt and calls **Gemini**. The system prompt hard-limits the model to the retrieved chunks and forbids inventing pricing or promises — accuracy over hype, because a wrong answer at a doorstep costs a sale.
-- **White-label** — one codebase rebrands for any industry in under a day; a public demo runs as "VoltLine", a fictional energy-sector tenant, not a client.
+- **White-label** — one codebase can be rebranded for another industry by swapping content and brand; the demo runs as "VoltLine", a fictional energy-sector tenant, not a client.
 
 ## What made it actually work (the debugging that mattered)
 
@@ -66,7 +66,7 @@ flowchart LR
 A 2026-07-04 pass benchmarked PitchPilot's positioning against established
 sales-enablement categories — Gong/Chorus (conversation intelligence), Klue/Crayon
 (competitive intel), Highspot/Seismic (enablement platforms). The "rebrand any
-industry in under a day" claim held up for **speed**: new content, new brand, no code
+industry" claim held up on **effort** in the one rebrand I tried: new content, new brand, no code
 change. It did not hold up for **concurrency**. The knowledge base used a hardcoded
 two-value product set (`luckycat` and a single `template` slot), and the indexer
 deleted-and-reinserted that one `template` slot on every rebrand — so reindexing a
@@ -90,17 +90,16 @@ tenant uses its own key — so a curious visitor can never exhaust or bill the r
 
 > Screenshots are from the public white-label demo (fictional "VoltLine" energy tenant), not a client deployment.
 
-| Wingman — answering a live price objection | Pitch kit — tools, demos & key numbers |
+| Wingman — answering a price objection | Pitch kit — tools, demos & key numbers |
 |---|---|
 | ![Wingman copilot](assets/wingman-template.png) | ![Pitch kit](assets/pitch-kit-template.png) |
 
 ## Stack
 
-`Supabase (pgvector · Edge Functions)` · `Gemini` · `RAG` · `TypeScript / React` · `Cloudflare Pages`
+`Supabase (pgvector · Edge Functions)` · `Gemini` · `RAG` · `TypeScript (Edge Functions)` · `Cloudflare Pages`
 
-## Live demo & the technique
+## The technique
 
-- Live demo: https://lucky-cat.pages.dev/pitcher-template/
 - The retrieval pipeline, runnable end-to-end: **[github.com/augbastos/rag-demo](https://github.com/augbastos/rag-demo)**
 
 More work: [augustobastos.pages.dev](https://augustobastos.pages.dev)

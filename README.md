@@ -6,11 +6,10 @@
 ![Gemini](https://img.shields.io/badge/generation-Gemini-4285f4)
 ![vanilla JS SPA](https://img.shields.io/badge/frontend-vanilla_JS_SPA-f7df1e)
 
-**A RAG copilot for field sales reps: ask a question about the playbook, get a one-paragraph answer and a button to the source doc — at the doorstep.**
+**A RAG copilot for field sales reps: ask a question about the playbook, get a short answer from the product's own documents, and a button to open the relevant doc when that helps — at the doorstep.**
 
 > Source is private. This is the architecture and the thinking behind it — no product
-> code. The retrieval technique is shown, runnable, in a separate repo:
-> **[rag-demo](https://github.com/augbastos/rag-demo)**.
+> code. PitchPilot is pre-launch: it has no users and no clients yet.
 
 **PitchPilot** is a white-label app for door-to-door / field sales reps: capture a
 lead, run the pitch, handle objections, and track commission — all on a phone, at the
@@ -51,7 +50,7 @@ flowchart LR
 ```
 
 - **Knowledge base** — the playbook is chunked, embedded, and stored in **Supabase pgvector**, partitioned by product to group each vertical's content.
-- **Retrieval RPC** — a Postgres `match` function returns the nearest chunks; this is the exact shape shown in [rag-demo](https://github.com/augbastos/rag-demo).
+- **Retrieval RPC** — a Postgres `match` function returns the 6 nearest chunks, filtered to the active product.
 - **Generation with retrieved context** — a **Supabase Edge Function** builds a prompt from the retrieved chunks and calls **Gemini**. The system prompt instructs the model to use only those chunks and not invent pricing or promises. These instructions guide generation; they do not guarantee factual accuracy.
 - **White-label** — one codebase can be rebranded for another industry by swapping content and brand; the demo runs as "VoltLine", a fictional energy-sector tenant, not a client.
 
@@ -97,8 +96,6 @@ demo tenant now runs on its own key instead of the production one.
 
 `Supabase (pgvector · Edge Functions)` · `Gemini` · `RAG` · `TypeScript (Edge Functions)` · `Cloudflare Pages`
 
-## The technique
+## More
 
-- The retrieval pipeline, runnable end-to-end: **[github.com/augbastos/rag-demo](https://github.com/augbastos/rag-demo)**
-
-More work: [augustobastos.pages.dev](https://augustobastos.pages.dev)
+More work: [augbastos.pages.dev](https://augbastos.pages.dev)

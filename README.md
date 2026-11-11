@@ -5,11 +5,20 @@
 ![Supabase pgvector](https://img.shields.io/badge/retrieval-Supabase_pgvector-3ecf8e)
 ![Gemini](https://img.shields.io/badge/generation-Gemini-4285f4)
 ![vanilla JS SPA](https://img.shields.io/badge/frontend-vanilla_JS_SPA-f7df1e)
+![licence: all rights reserved](https://img.shields.io/badge/licence-all_rights_reserved-lightgrey)
 
 **A RAG copilot for field sales reps: ask a question about the playbook, get a short answer from the product's own documents, and a button to open the relevant doc when that helps — at the doorstep.**
 
+## Status
+
 > Source is private. This is the architecture and the thinking behind it — no product
 > code. PitchPilot is pre-launch: it has no users and no clients yet.
+
+This is a working demo — branded **"VoltLine"** for a fictional energy-sector vertical —
+not yet deployed to a real sales team. Everything below (the architecture, the
+debugging, the fixes) is real and runs in that demo.
+
+## What it does
 
 **PitchPilot** is a white-label app for door-to-door / field sales reps: capture a
 lead, run the pitch, handle objections, and track commission — all on a phone, at the
@@ -19,11 +28,6 @@ base. The system prompt instructs the model to answer using only
 the retrieved chunks, and the app can hand the rep a button straight to the source doc. The
 prose itself is deliberately clean of inline citations: a rep reading off a doorstep does
 not want `[chunk 3]` in the middle of a sentence.
-
-**Where it stands:** this is a working demo — branded **"VoltLine"** for a
-fictional energy-sector vertical — not yet deployed to a real sales team. Everything
-below (the architecture, the debugging, the fixes) is real and runs in that demo.
-It has no users and no client.
 
 ## The problem
 
@@ -63,20 +67,12 @@ flowchart LR
 ## What a competitive check found and fixed
 
 A 2026-07-04 pass benchmarked PitchPilot's positioning against established
-sales-enablement categories — Gong/Chorus (conversation intelligence), Klue/Crayon
-(competitive intel), Highspot/Seismic (enablement platforms). The "rebrand any
-industry" claim held up on **effort** in the one rebrand I tried: new content, new brand, no code
-change. It did not hold up for **concurrency**. The knowledge base used a hardcoded
-two-value product set (`luckycat` and a single `template` slot), and the indexer
-deleted-and-reinserted that one `template` slot on every rebrand — so reindexing a
-second industry vertical silently wiped out whatever demo was already using it. Two
-white-label demos could never run at the same time; the claim was only ever true one
-vertical at a time.
+sales-enablement categories: Gong/Chorus (conversation intelligence), Klue/Crayon
+(competitive intel), Highspot/Seismic (enablement platforms).
 
-Fix: replaced the hardcoded slot with a real multi-tenant KB registry (migration
-`0096_pitcher_kb_tenants`) — each vertical now gets its own registered slug and
-chunks, with a foreign-key constraint requiring chunks to reference a registered
-slug. Multiple industry demos can now coexist without one erasing another.
+- **Held up: effort.** In the one rebrand I tried, it took new content and a new brand, with no code change.
+- **Did not hold up: concurrency.** The knowledge base used a hardcoded two-value product set (`luckycat` and a single `template` slot). The indexer deleted and reinserted that `template` slot on every rebrand, so reindexing a second industry vertical silently wiped out whatever demo was already using it. Two white-label demos could never run at the same time; the claim was only ever true one vertical at a time.
+- **Fix:** a real multi-tenant KB registry (migration `0096_pitcher_kb_tenants`). Each vertical gets its own registered slug and chunks, and a foreign-key constraint requires chunks to reference a registered slug. Multiple industry demos can now coexist without one erasing another.
 
 ## Isolating the demo (a security note)
 
@@ -95,6 +91,20 @@ demo tenant now runs on its own key instead of the production one.
 ## Stack
 
 `Supabase (pgvector · Edge Functions)` · `Gemini` · `RAG` · `TypeScript (Edge Functions)` · `Cloudflare Pages`
+
+## Layout
+
+| Path | What it holds |
+|---|---|
+| `assets/` | The two screenshots shown above |
+| `.github/workflows/safety.yml` | Safety check that runs on pull requests |
+| `LICENSE` | All rights reserved |
+
+## Licence
+
+All rights reserved. No permission is granted to copy, modify, distribute or reuse any
+part of this repository without prior written permission from the copyright holder. See
+[LICENSE](LICENSE).
 
 ## More
 

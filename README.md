@@ -108,4 +108,6 @@ part of this repository without prior written permission from the copyright hold
 
 ## More
 
-More work: [augbastos.pages.dev](https://augbastos.pages.dev)
+Product page: [luckycat.ie/pitchpilot](https://luckycat.ie/pitchpilot/)
+
+More work: [augbastos.dev](https://augbastos.dev)

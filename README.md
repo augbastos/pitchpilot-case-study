@@ -97,7 +97,7 @@ demo tenant now runs on its own key instead of the production one.
 | Path | What it holds |
 |---|---|
 | `assets/` | The two screenshots shown above |
-| `.github/workflows/safety.yml` | Safety check that runs on pull requests |
+| `.github/workflows/ci.yml` | The `CI` workflow on pull requests: its `Safety` job scans for secrets and fails with "needs owner" on changes to `.github/scripts/safety.sh`, `.github/safety-critical.txt`, `.github/workflows/ci.yml` or a path listed in `.github/safety-critical.txt` on the base branch; `CI passed` aggregates the jobs |
 | `LICENSE` | All rights reserved |
 
 ## Licence
